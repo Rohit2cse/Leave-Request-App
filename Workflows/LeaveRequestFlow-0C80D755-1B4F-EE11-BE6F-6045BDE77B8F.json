@@ -1,0 +1,277 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_approvals": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "rohit_sharedapprovals_7a334"
+        },
+        "api": {
+          "name": "shared_approvals"
+        }
+      },
+      "shared_sharepointonline": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "rohit_sharedsharepointonline_df297"
+        },
+        "api": {
+          "name": "shared_sharepointonline"
+        }
+      },
+      "shared_office365": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "rohit_sharedoffice365_76d1a"
+        },
+        "api": {
+          "name": "shared_office365"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "When_an_item_is_created": {
+          "recurrence": {
+            "interval": 5,
+            "frequency": "Minute"
+          },
+          "splitOn": "@triggerOutputs()?['body/value']",
+          "metadata": {
+            "operationMetadataId": "679729b7-b62e-4ce3-a9af-ea2fd16ec709"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_sharepointonline",
+              "operationId": "GetOnNewItems",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+            },
+            "parameters": {
+              "dataset": "https://gecgudlavallerumic.sharepoint.com/sites/MINIAPP",
+              "table": "08dd2a54-a0a6-4a0a-81ed-e895803f427d"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        }
+      },
+      "actions": {
+        "Manager_Approval": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "eb5da6ef-8014-41f7-950b-440bb02b12c4"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_approvals",
+              "operationId": "CreateAnApproval",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_approvals"
+            },
+            "parameters": {
+              "approvalType": "CustomResponse",
+              "ApprovalCreationInput/responseOptions": [
+                "Approve",
+                "Reject"
+              ],
+              "ApprovalCreationInput/title": "@triggerOutputs()?['body/LeaveType/Value']",
+              "ApprovalCreationInput/assignedTo": "@{triggerOutputs()?['body/Manager/Email']};",
+              "ApprovalCreationInput/details": "Please Approve the below Leave Request\nLeave Requestor :@{triggerOutputs()?['body/CreatedBY/DisplayName']}\nLeave Type :@{triggerOutputs()?['body/LeaveType/Value']}\nDeapartMent :@{triggerOutputs()?['body/Department/Value']}\nStart Date:@{triggerOutputs()?['body/StartDate']}\nEnd Date:@{triggerOutputs()?['body/EndDate']}\nNumber Of Days:@{triggerOutputs()?['body/NumberofDays']}",
+              "ApprovalCreationInput/itemLink": "@triggerOutputs()?['body/{Link}']",
+              "ApprovalCreationInput/itemLinkDescription": "@triggerOutputs()?['body/LeaveType/Value']",
+              "ApprovalCreationInput/requestor": "@{triggerOutputs()?['body/CreatedBY/Email']};",
+              "ApprovalCreationInput/enableNotifications": true,
+              "ApprovalCreationInput/enableReassignment": true
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Wait_for_an_approval": {
+          "runAfter": {
+            "Manager_Approval": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "5807678c-6e3b-4beb-85ea-36ea059a5d78"
+          },
+          "type": "OpenApiConnectionWebhook",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_approvals",
+              "operationId": "WaitForAnApproval",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_approvals"
+            },
+            "parameters": {
+              "approvalName": "@outputs('Manager_Approval')?['body/name']"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Condition": {
+          "actions": {
+            "Apply_to_each": {
+              "foreach": "@outputs('Wait_for_an_approval')?['body/responses']",
+              "actions": {
+                "Manager_Approved": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "3bd4793f-a0a5-4b47-b2df-445a270d51a0"
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_sharepointonline",
+                      "operationId": "PatchItem",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                    },
+                    "parameters": {
+                      "dataset": "https://gecgudlavallerumic.sharepoint.com/sites/MINIAPP",
+                      "table": "08dd2a54-a0a6-4a0a-81ed-e895803f427d",
+                      "id": "@triggerOutputs()?['body/ID']",
+                      "item/Title": "@triggerOutputs()?['body/LeaveType/Value']",
+                      "item/LeaveStatus/Value": "Approved",
+                      "item/Approvalcomments": "✅Approved By(@{items('Apply_to_each')?['responder/displayName']})\n@{items('Apply_to_each')?['comments']}"
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  }
+                }
+              },
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "5b170f45-a819-44da-8df1-8d1805abbbbf"
+              },
+              "type": "Foreach"
+            },
+            "Apply_to_each_3": {
+              "foreach": "@outputs('Wait_for_an_approval')?['body/responses']",
+              "actions": {
+                "Send_an_email_(V2)": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "fa812d7a-42c6-4f1d-818e-02a3cb71471a"
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_office365",
+                      "operationId": "SendEmailV2",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
+                    },
+                    "parameters": {
+                      "emailMessage/To": "@triggerOutputs()?['body/CreatedBY/Email']",
+                      "emailMessage/Subject": "Your Leave Request Update",
+                      "emailMessage/Body": "<p>Below Leave Request has been Approved<br>\nLeave Type:@{triggerOutputs()?['body/LeaveType/Value']}<br>\nDepartment:@{triggerOutputs()?['body/Department/Value']}<br>\nStart Date:@{triggerOutputs()?['body/StartDate']}<br>\nEnd Date:@{triggerOutputs()?['body/EndDate']}<br>\nNumber of Days :@{triggerOutputs()?['body/NumberofDays']}<br>\nApproval Comments:@{items('Apply_to_each_3')?['comments']}</p>",
+                      "emailMessage/Importance": "Normal"
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  }
+                }
+              },
+              "runAfter": {
+                "Apply_to_each": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "6cc1925f-95e6-41ba-9f2e-b9a3198f5484"
+              },
+              "type": "Foreach"
+            }
+          },
+          "runAfter": {
+            "Wait_for_an_approval": [
+              "Succeeded"
+            ]
+          },
+          "else": {
+            "actions": {
+              "Apply_to_each_2": {
+                "foreach": "@outputs('Wait_for_an_approval')?['body/responses']",
+                "actions": {
+                  "Manager_Rejected": {
+                    "runAfter": {},
+                    "metadata": {
+                      "operationMetadataId": "23763fa9-23b6-4b5f-b156-2dd41356bedc"
+                    },
+                    "type": "OpenApiConnection",
+                    "inputs": {
+                      "host": {
+                        "connectionName": "shared_sharepointonline",
+                        "operationId": "PatchItem",
+                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                      },
+                      "parameters": {
+                        "dataset": "https://gecgudlavallerumic.sharepoint.com/sites/MINIAPP",
+                        "table": "08dd2a54-a0a6-4a0a-81ed-e895803f427d",
+                        "id": "@triggerOutputs()?['body/ID']",
+                        "item/Title": "@triggerOutputs()?['body/LeaveType/Value']",
+                        "item/LeaveStatus/Value": "Rejected",
+                        "item/Approvalcomments": "❌Rejected By(@{items('Apply_to_each_2')?['responder/displayName']})\n@{items('Apply_to_each_2')?['comments']}"
+                      },
+                      "authentication": "@parameters('$authentication')"
+                    }
+                  },
+                  "Response_Notification_": {
+                    "runAfter": {
+                      "Manager_Rejected": [
+                        "Succeeded"
+                      ]
+                    },
+                    "metadata": {
+                      "operationMetadataId": "83382616-b502-4926-9d3a-f6501aa01e1a"
+                    },
+                    "type": "OpenApiConnection",
+                    "inputs": {
+                      "host": {
+                        "connectionName": "shared_office365",
+                        "operationId": "SendEmailV2",
+                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
+                      },
+                      "parameters": {
+                        "emailMessage/To": "@outputs('Manager_Rejected')?['body/CreatedBY/Email']",
+                        "emailMessage/Subject": "Your Leave Request Update",
+                        "emailMessage/Body": "<p>Below Leave Request Has Been Rejected<br>\nLeave Type :@{triggerOutputs()?['body/LeaveType/Value']}<br>\nDepartment :@{triggerOutputs()?['body/Department/Value']}<br>\nStart Date:@{triggerOutputs()?['body/StartDate']}<br>\nEnd Date:@{triggerOutputs()?['body/EndDate']}<br>\nNumber Of Days:@{triggerOutputs()?['body/NumberofDays']}<br>\nReason:@{items('Apply_to_each_2')?['comments']}</p>",
+                        "emailMessage/Importance": "Normal"
+                      },
+                      "authentication": "@parameters('$authentication')"
+                    }
+                  }
+                },
+                "runAfter": {},
+                "metadata": {
+                  "operationMetadataId": "626e086b-2168-4757-8c07-d58246e69ee1"
+                },
+                "type": "Foreach"
+              }
+            }
+          },
+          "expression": {
+            "equals": [
+              "@outputs('Wait_for_an_approval')?['body/outcome']",
+              "Approve"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "05897d1a-d660-4475-a2f4-3107305e9b55"
+          },
+          "type": "If"
+        }
+      }
+    },
+    "templateName": ""
+  },
+  "schemaVersion": "1.0.0.0"
+}

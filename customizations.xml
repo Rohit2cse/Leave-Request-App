@@ -1,0 +1,124 @@
+<ImportExportXml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Entities></Entities>
+  <Roles></Roles>
+  <Workflows>
+    <Workflow WorkflowId="{0c80d755-1b4f-ee11-be6f-6045bde77b8f}" Name="Leave Request Flow">
+      <JsonFileName>/Workflows/LeaveRequestFlow-0C80D755-1B4F-EE11-BE6F-6045BDE77B8F.json</JsonFileName>
+      <Type>1</Type>
+      <Subprocess>0</Subprocess>
+      <Category>5</Category>
+      <Mode>0</Mode>
+      <Scope>4</Scope>
+      <OnDemand>0</OnDemand>
+      <TriggerOnCreate>0</TriggerOnCreate>
+      <TriggerOnDelete>0</TriggerOnDelete>
+      <AsyncAutodelete>0</AsyncAutodelete>
+      <SyncWorkflowLogOnFailure>0</SyncWorkflowLogOnFailure>
+      <StateCode>1</StateCode>
+      <StatusCode>2</StatusCode>
+      <RunAs>1</RunAs>
+      <IsTransacted>1</IsTransacted>
+      <IntroducedVersion>1.0.0.0</IntroducedVersion>
+      <IsCustomizable>1</IsCustomizable>
+      <BusinessProcessType>0</BusinessProcessType>
+      <IsCustomProcessingStepAllowedForOtherPublishers>1</IsCustomProcessingStepAllowedForOtherPublishers>
+      <PrimaryEntity>none</PrimaryEntity>
+      <LocalizedNames>
+        <LocalizedName languagecode="1033" description="Leave Request Flow" />
+      </LocalizedNames>
+    </Workflow>
+  </Workflows>
+  <FieldSecurityProfiles></FieldSecurityProfiles>
+  <Templates />
+  <EntityMaps />
+  <EntityRelationships />
+  <OrganizationSettings>
+    <general>
+      <fullnameconventioncode>1</fullnameconventioncode>
+      <numberformat>us</numberformat>
+      <negativeformatcode>1</negativeformatcode>
+      <currencysymbol>$</currencysymbol>
+      <currencyformatcode>0</currencyformatcode>
+      <pricingdecimalprecision>2</pricingdecimalprecision>
+      <sharetopreviousowneronassign>False</sharetopreviousowneronassign>
+      <blockedattachments>ade;adp;app;asa;ashx;asmx;asp;bas;bat;cdx;cer;chm;class;cmd;com;config;cpl;crt;csh;dll;exe;fxp;hlp;hta;htr;htw;ida;idc;idq;inf;ins;isp;its;jar;js;jse;ksh;lnk;mad;maf;mag;mam;maq;mar;mas;mat;mau;mav;maw;mda;mdb;mde;mdt;mdw;mdz;msc;msh;msh1;msh1xml;msh2;msh2xml;mshxml;msi;msp;mst;ops;pcd;pif;prf;prg;printer;pst;reg;rem;scf;scr;sct;shb;shs;shtm;shtml;soap;stm;tmp;url;vb;vbe;vbs;vsmacros;vss;vst;vsw;ws;wsc;wsf;wsh</blockedattachments>
+      <getstartedpanecontentenabled>True</getstartedpanecontentenabled>
+      <ispresenceenabled>True</ispresenceenabled>
+      <isautosaveenabled>True</isautosaveenabled>
+      <globalhelpurl></globalhelpurl>
+      <globalhelpurlenabled>False</globalhelpurlenabled>
+      <globalappendurlparametersenabled>False</globalappendurlparametersenabled>
+      <istextwrapenabled>True</istextwrapenabled>
+      <enablelivepersonacarduci>True</enablelivepersonacarduci>
+      <allowlegacydialogsembedding>True</allowlegacydialogsembedding>
+    </general>
+  </OrganizationSettings>
+  <optionsets />
+  <CustomControls />
+  <EntityDataProviders />
+  <CanvasApps>
+    <CanvasApp>
+      <Name>rohit_leaverequestapp_94070</Name>
+      <AppVersion>2023-09-07T18:33:29Z</AppVersion>
+      <Status>Ready</Status>
+      <CreatedByClientVersion>3.23084.13.0</CreatedByClientVersion>
+      <MinClientVersion>3.23084.13.0</MinClientVersion>
+      <Tags>{"primaryDeviceWidth":"1366","primaryDeviceHeight":"768","supportsPortrait":"true","supportsLandscape":"true","primaryFormFactor":"Tablet","showStatusBar":"false","publisherVersion":"3.23084.13","minimumRequiredApiVersion":"2.2.0","hasComponent":"false","hasUnlockedComponent":"false","isUnifiedRootApp":"false","sienaVersion":"20230907T182302Z-3.23084.13.0"}</Tags>
+      <IsCdsUpgraded>0</IsCdsUpgraded>
+      <GalleryItemId xsi:nil="true"></GalleryItemId>
+      <BackgroundColor>RGBA(0,176,240,1)</BackgroundColor>
+      <DisplayName>Leave Request App</DisplayName>
+      <Description xsi:nil="true"></Description>
+      <CommitMessage xsi:nil="true"></CommitMessage>
+      <Publisher xsi:nil="true"></Publisher>
+      <AuthorizationReferences>[]</AuthorizationReferences>
+      <ConnectionReferences>{"6662d01c-1846-4ef5-8256-1d32d0824990":{"id":"/providers/microsoft.powerapps/apis/shared_office365users","displayName":"Office 365 Users","iconUri":"https://connectoricons-prod.azureedge.net/u/laborbol/partial-builds/ase-v3/1.0.1653.3402/office365users/icon.png","dataSources":["Office365Users"],"dependencies":[],"dependents":[],"parameterHints":{},"parameterHintsV2":{},"isOnPremiseConnection":false,"bypassConsent":false,"dataSets":{},"apiTier":"Standard"},"587ad20c-da92-42a2-abda-1bc329713abf":{"id":"/providers/microsoft.powerapps/apis/shared_sharepointonline","displayName":"SharePoint","iconUri":"https://connectoricons-prod.azureedge.net/u/laborbol/partial-builds/ase-v3/1.0.1653.3402/sharepointonline/icon.png","dataSources":["Approvers List","Employee Credentials","Manager Credentials","Leave Requests"],"dependencies":[],"dependents":[],"parameterHints":{},"parameterHintsV2":{},"isOnPremiseConnection":false,"bypassConsent":false,"dataSets":{"https://gecgudlavallerumic.sharepoint.com/sites/MINIAPP":{"dataSources":{"Approvers List":{"tableName":"0999faa4-9a34-4cd9-8b59-f00cbbc1a85a"},"Employee Credentials":{"tableName":"02d1d545-c5d8-4389-87a8-ef398df442bd"},"Manager Credentials":{"tableName":"59d23be6-d003-41fc-91d1-92215fa9beb5"},"Leave Requests":{"tableName":"08dd2a54-a0a6-4a0a-81ed-e895803f427d"}}}},"apiTier":"Standard","actions":["providers/PowerPlatform.Governance/Operations/Read","providers/PowerPlatform.Governance/Operations/Write"]}}</ConnectionReferences>
+      <DatabaseReferences>{}</DatabaseReferences>
+      <AppComponents>[]</AppComponents>
+      <AppComponentDependencies>[]</AppComponentDependencies>
+      <CanConsumeAppPass>1</CanConsumeAppPass>
+      <CanvasAppType>0</CanvasAppType>
+      <BypassConsent>0</BypassConsent>
+      <AdminControlBypassConsent>0</AdminControlBypassConsent>
+      <EmbeddedApp xsi:nil="true"></EmbeddedApp>
+      <IntroducedVersion>1.0</IntroducedVersion>
+      <CdsDependencies>{"cdsdependencies":[]}</CdsDependencies>
+      <IsCustomizable>1</IsCustomizable>
+      <BackgroundImageUri>/CanvasApps/rohit_leaverequestapp_94070_BackgroundImageUri</BackgroundImageUri>
+      <DocumentUri>/CanvasApps/rohit_leaverequestapp_94070_DocumentUri.msapp</DocumentUri>
+    </CanvasApp>
+  </CanvasApps>
+  <connectionreferences>
+    <connectionreference connectionreferencelogicalname="rohit_sharedapprovals_7a334">
+      <connectionreferencedisplayname>Approvals LeaveRequestApp-7a334</connectionreferencedisplayname>
+      <connectorid>/providers/Microsoft.PowerApps/apis/shared_approvals</connectorid>
+      <iscustomizable>1</iscustomizable>
+      <statecode>0</statecode>
+      <statuscode>1</statuscode>
+    </connectionreference>
+    <connectionreference connectionreferencelogicalname="rohit_sharedoffice365_76d1a">
+      <connectionreferencedisplayname>Office 365 Outlook LeaveRequestApp-76d1a</connectionreferencedisplayname>
+      <connectorid>/providers/Microsoft.PowerApps/apis/shared_office365</connectorid>
+      <iscustomizable>1</iscustomizable>
+      <statecode>0</statecode>
+      <statuscode>1</statuscode>
+    </connectionreference>
+    <connectionreference connectionreferencelogicalname="rohit_sharedoutlook_c6728">
+      <connectionreferencedisplayname>Outlook.com LeaveRequestApp-c6728</connectionreferencedisplayname>
+      <connectorid>/providers/Microsoft.PowerApps/apis/shared_outlook</connectorid>
+      <iscustomizable>1</iscustomizable>
+      <statecode>0</statecode>
+      <statuscode>1</statuscode>
+    </connectionreference>
+    <connectionreference connectionreferencelogicalname="rohit_sharedsharepointonline_df297">
+      <connectionreferencedisplayname>SharePoint LeaveRequestApp-df297</connectionreferencedisplayname>
+      <connectorid>/providers/Microsoft.PowerApps/apis/shared_sharepointonline</connectorid>
+      <iscustomizable>1</iscustomizable>
+      <statecode>0</statecode>
+      <statuscode>1</statuscode>
+    </connectionreference>
+  </connectionreferences>
+  <Languages>
+    <Language>1033</Language>
+  </Languages>
+</ImportExportXml>
